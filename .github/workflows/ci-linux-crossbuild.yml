@@ -1,6 +1,7 @@
 name: ci - linux binary cross build
 
 on:
+  workflow_dispatch:  # 允许手动触发
   workflow_call:
     outputs:
       release_tags:
