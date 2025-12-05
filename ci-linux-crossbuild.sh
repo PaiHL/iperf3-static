@@ -13,11 +13,13 @@ arch="${4:-x86_64}"
 
 printf '\n%s\n' "Building iperf3 for $crossbuild_target"
 printf '%s\n\n' "repo: $github_repo branch:$github_branch"
+printf '\n\nhttps://github.com/PaiHL/iperf3-static/edit/master/ci-linux-crossbuild.sh'
 
 sudo apk update
 
 export CPPFLAGS: "-I/home/gh/local/include -I/usr/include/fortify -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3"
 export LDFLAGS: "-static --static -L/home/gh/local/lib -Wl,-O1,--as-needed,--sort-common,-z,nodlopen,-z,noexecstack,-z,now,-z,relro,-z,--no-copy-dt-needed-entries,--build-id"
+export CFLAGS: "-O2 -s"
 
 cd || exit
 mkdir -p /home/gh/local
@@ -35,7 +37,7 @@ rm -rf /home/gh/iperf3
 git clone --no-tags --single-branch --branch "${github_branch}" --shallow-submodules --recurse-submodules -j"$(nproc)" --depth 1 "${github_repo}" /home/gh/iperf3
 cd /home/gh/iperf3 || exit
 
-export CFLAGS="-O2 -s"
+
 ./configure --with-openssl="/home/gh/local" --disable-shared --enable-static-bin --prefix="/home/gh/local"
 make -j$(nproc)
 make install
