@@ -35,6 +35,7 @@ rm -rf /home/gh/iperf3
 git clone --no-tags --single-branch --branch "${github_branch}" --shallow-submodules --recurse-submodules -j"$(nproc)" --depth 1 "${github_repo}" /home/gh/iperf3
 cd /home/gh/iperf3 || exit
 
+export CFLAGS="-O2 -s"
 ./configure --with-openssl="/home/gh/local" --disable-shared --enable-static-bin --prefix="/home/gh/local"
 make -j$(nproc)
 make install
